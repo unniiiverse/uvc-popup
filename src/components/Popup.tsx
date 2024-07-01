@@ -20,6 +20,35 @@ interface ILayerProps extends IPopupSettings {
   className?: string
 }
 
+interface IPopupProps {
+  /** Popup inner */
+  children: React.ReactNode | React.ReactNode[]
+
+  className?: string
+
+  /** Out ID setter */
+  idSetter: (val: string) => void
+
+  /** aria-labbeledby */
+  labelledbyId?: string,
+
+  /** State observer */
+  stateSetter?: (val: boolean) => void
+}
+
+interface ITriggerProps {
+  /** Button inner */
+  children: React.ReactNode | React.ReactNode[]
+
+  className?: string
+
+  /** Popup id given by idSetter in Popup component */
+  id: string,
+
+  /** aria-label */
+  label?: string
+}
+
 /** Popup layer */
 export const Layer: React.FC<ILayerProps> = ({ children, className, scrollBehaivour }) => {
   const ref = useRef<HTMLDivElement>(null)
@@ -57,23 +86,6 @@ export const Layer: React.FC<ILayerProps> = ({ children, className, scrollBehaiv
 
 
 
-interface IPopupProps {
-  /** Popup inner */
-  children: React.ReactNode | React.ReactNode[]
-
-  className?: string
-
-  /** Out ID setter */
-  idSetter: (val: string) => void
-
-  /** aria-labbeledby */
-  labelledbyId?: string,
-
-  /** State observer */
-  stateSetter?: (val: boolean) => void
-}
-
-
 /** Popup dialog */
 export const Popup: React.FC<IPopupProps> = ({ children, className, idSetter, labelledbyId, stateSetter }) => {
   const ref = useRef<HTMLDivElement>(null)
@@ -104,19 +116,6 @@ export const Popup: React.FC<IPopupProps> = ({ children, className, idSetter, la
 };
 
 
-
-interface ITriggerProps {
-  /** Button inner */
-  children: React.ReactNode | React.ReactNode[]
-
-  className?: string
-
-  /** Popup id given by idSetter in Popup component */
-  id: string,
-
-  /** aria-label */
-  label?: string
-}
 
 /** Popup trigger. Already button element, putting another button element may cause hydration error in Next.js  */
 export const Trigger: React.FC<ITriggerProps> = ({ children, className, id, label }) => {

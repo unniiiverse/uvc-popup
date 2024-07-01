@@ -1,8 +1,8 @@
 {
   "name": "uvc-popup",
   "version": "1.0.0",
-  "description": "Simple React popup component",
-  "keywords": [],
+  "description": "Simple react popup written on typescript!",
+  "keywords": ["uvc", "react-component", "popup", "modal", "dialog"],
   "license": "MIT",
   "author": "unniiiverse",
   "type": "module",
