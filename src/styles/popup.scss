@@ -1,0 +1,50 @@
+.uvc-popup {
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  cursor: default !important;
+
+  &--active {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+  }
+
+
+
+  &-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .2s ease-in-out, visibility .2s ease-in-out;
+    background: rgba($color: #000, $alpha: .4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    &--active {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  &-trigger {
+    &--active {}
+  }
+
+
+
+  &--fancy {
+    .uvc-popup {
+      background: #fff;
+      padding: 8px 16px;
+      border-radius: 4px;
+      transition: .2s ease-in-out;
+    }
+  }
+}
