@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, HTMLProps } from "react";
 import * as uuid from 'uuid';
 
 import '../styles/popup.scss';
@@ -24,25 +24,26 @@ interface IPopupProps {
   /** Popup inner */
   children: React.ReactNode | React.ReactNode[]
 
-  className?: string
+  /** Popup ID */
+  id: string
 
-  /** Out ID setter */
-  idSetter: (val: string) => void
+  className?: string
 
   /** aria-labbeledby */
   labelledbyId?: string,
 
   /** State observer */
   stateSetter?: (val: boolean) => void
+
 }
 
-interface ITriggerProps {
+interface ITriggerProps extends HTMLProps<HTMLButtonElement> {
   /** Button inner */
   children: React.ReactNode | React.ReactNode[]
 
   className?: string
 
-  /** Popup id given by idSetter in Popup component */
+  /** Popup ID */
   id: string,
 
   /** aria-label */
@@ -51,13 +52,13 @@ interface ITriggerProps {
 
 /** Popup layer */
 export const Layer: React.FC<ILayerProps> = ({ children, className, scrollBehaivour }) => {
-  const ref = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLDivElement>(null);
   scrollBehaivour = scrollBehaivour || 'hide';
 
   useEffect(() => {
     const layer = ref.current;
 
-    if (!layer) return
+    if (!layer) return;
 
     layer.addEventListener('click', e => {
       const self = e.target as HTMLElement;
@@ -68,14 +69,14 @@ export const Layer: React.FC<ILayerProps> = ({ children, className, scrollBehaiv
           const child = node as HTMLDivElement;
 
           togglePopup(child.id, true);
-        })
+        });
       }
-    })
+    });
 
     if (scrollBehaivour === 'default') {
-      layer.style.position = 'fixed'
+      layer.style.position = 'fixed';
     }
-  }, [])
+  }, []);
 
   return (
     <div className={`uvc-popup-layer ${className ? className : ''}`} data-uvc-popup-settings={JSON.stringify({ scrollBehaivour })} ref={ref} aria-hidden>
@@ -87,26 +88,22 @@ export const Layer: React.FC<ILayerProps> = ({ children, className, scrollBehaiv
 
 
 /** Popup dialog */
-export const Popup: React.FC<IPopupProps> = ({ children, className, idSetter, labelledbyId, stateSetter }) => {
-  const ref = useRef<HTMLDivElement>(null)
-  const [id] = useState(`uvc-${uuid.v4()}`);
-
+export const Popup: React.FC<IPopupProps> = ({ children, className, labelledbyId, stateSetter, id }) => {
+  const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    idSetter(id);
-
     const observer = new MutationObserver(() => {
       const self = ref.current as HTMLDivElement;
 
-      if (stateSetter) stateSetter(self.classList.contains('uvc-popup--active'))
-    })
+      if (stateSetter) stateSetter(self.classList.contains('uvc-popup--active'));
+    });
 
     observer.observe(ref.current!, {
       attributes: true,
       attributeFilter: ['class'],
       childList: false,
       characterData: false
-    })
-  }, [])
+    });
+  }, []);
 
   return (
     <div className={`uvc-popup ${className ? className : ''}`} id={id} role="dialog" aria-modal aria-hidden aria-labelledby={labelledbyId} ref={ref}>
@@ -119,7 +116,7 @@ export const Popup: React.FC<IPopupProps> = ({ children, className, idSetter, la
 
 /** Popup trigger. Already button element, putting another button element may cause hydration error in Next.js  */
 export const Trigger: React.FC<ITriggerProps> = ({ children, className, id, label }) => {
-  label = label || 'Toggle popup'
+  label = label || 'Toggle popup';
 
   return (
     <button className={`uvc-popup-trigger ${className ? className : ''}`} data-uvc-popup-target={id} aria-haspopup="dialog" tabIndex={0} onClick={() => togglePopup(id)} aria-label={label}>
@@ -150,20 +147,20 @@ export function togglePopup(id: string, hide?: boolean) {
   // Define action
   if (hide || popup.classList.contains('uvc-popup--active')) {
     // Hide
-    popup.classList.remove('uvc-popup--active')
-    popup.setAttribute('aria-hidden', 'true')
+    popup.classList.remove('uvc-popup--active');
+    popup.setAttribute('aria-hidden', 'true');
 
     triggers.forEach(trigger => {
-      trigger.classList.remove('uvc-popup-trigger--active')
-    })
+      trigger.classList.remove('uvc-popup-trigger--active');
+    });
   } else {
     // Show
-    popup.classList.add('uvc-popup--active')
-    popup.setAttribute('aria-hidden', 'false')
+    popup.classList.add('uvc-popup--active');
+    popup.setAttribute('aria-hidden', 'false');
 
     triggers.forEach(trigger => {
-      trigger.classList.add('uvc-popup-trigger--active')
-    })
+      trigger.classList.add('uvc-popup-trigger--active');
+    });
   }
 
 
@@ -175,20 +172,20 @@ export function togglePopup(id: string, hide?: boolean) {
     const child = node as HTMLDivElement;
 
     if (child.classList.contains('uvc-popup--active')) isLayerActive = true;
-  })
+  });
 
   if (isLayerActive) {
     // Show
-    layer.classList.add('uvc-popup-layer--active')
-    layer.setAttribute('aria-hidden', 'true')
+    layer.classList.add('uvc-popup-layer--active');
+    layer.setAttribute('aria-hidden', 'true');
 
-    if (settings.scrollBehaivour === 'hide') toggleScroll(true, layer)
+    if (settings.scrollBehaivour === 'hide') toggleScroll(true, layer);
   } else {
     // Hide
-    layer.classList.remove('uvc-popup-layer--active')
-    layer.setAttribute('aria-hidden', 'false')
+    layer.classList.remove('uvc-popup-layer--active');
+    layer.setAttribute('aria-hidden', 'false');
 
-    if (settings.scrollBehaivour === 'hide') toggleScroll(false, layer)
+    if (settings.scrollBehaivour === 'hide') toggleScroll(false, layer);
   }
 }
 
@@ -207,4 +204,8 @@ export function toggleScroll(hide: boolean, extendElement?: HTMLElement) {
     document.body.style.overflowY = 'visible';
     extendElement.style.paddingRight = '0';
   }
+}
+
+export function createUVCID() {
+  return `uvc-${uuid.v4()}`;
 }

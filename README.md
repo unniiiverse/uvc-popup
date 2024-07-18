@@ -6,21 +6,21 @@ Simple react popup written on typescript! Also compatible with Next.js
 Default usage example
 ```tsx
 import React, { useState, useEffect } from "react";
-import { Layer, Popup, Trigger } from "uvc-popup";
+import { Layer, Popup, Trigger, createUVCID } from "uvc-popup";
 
 // Required styling
 import "uvc-popup/css"
 
 const Page: React.FC = () => {
-  const [id_1, setId_1] = useState<string>('');
-  const [id_2, setId_2] = useState<string>('');
+  const [id_1] = useState<string>(createUVCID());
+  const [id_2] = useState<string>(createUVCID());
 
   return (
     <div className="bg-slate-400 w-full h-full min-h-screen">
       {/* You can add "uvc-popup--fancy" to get basic styling */}
       <Layer className="uvc-popup--fancy">
-        {/* Pupups must be inside Layer component */}
-        <Popup idSetter={setId_1}>
+        {/* Popups must be inside Layer component */}
+        <Popup id={id_1}>
           <p>DIALOG 1</p>
 
           <Trigger id={id_1}>
@@ -28,7 +28,7 @@ const Page: React.FC = () => {
           </Trigger>
         </Popup>
 
-        <Popup idSetter={setId_2}>
+        <Popup id={id_2}>
           <p>DIALOG 2</p>
 
           <Trigger id={id_2}>
