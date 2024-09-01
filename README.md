@@ -1,3 +1,6 @@
+# 🛑 DEPRECATED 🛑
+Use ```@fullkekw/fkw-popup``` instead
+
 # React popup
 
 Simple react popup written on typescript! Also compatible with Next.js
